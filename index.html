@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Green Energy — Billing System</title>
+<style>
+:root{--green:#126b32;--deep:#0c4825;--pale:#edf7ef;--line:#d8e3da;--ink:#1d2920}
+*{box-sizing:border-box}body{margin:0;background:#f3f6f3;color:var(--ink);font-family:Arial,Helvetica,sans-serif}.app{max-width:1080px;margin:28px auto;padding:0 16px 32px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.topbar h1{font-size:24px;margin:0;color:var(--deep)}.topbar p{margin:5px 0 0;color:#607065;font-size:13px}.panel{background:#fff;border:1px solid #e0e8e1;border-radius:14px;padding:22px;box-shadow:0 8px 28px #163d1d0a;margin-bottom:16px}.section-title{font-size:16px;margin:0 0 15px;color:var(--deep)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.field label{display:block;font-size:12px;font-weight:700;color:#526258;margin-bottom:6px}.field input{width:100%;padding:11px 12px;border:1px solid #cdd9cf;border-radius:8px;font:inherit;min-width:0}.field input:focus{outline:2px solid #a8d7b3;border-color:var(--green)}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:580px}th{background:var(--pale);color:var(--deep);font-size:12px;text-align:left;padding:12px 10px}td{padding:8px 7px;border-bottom:1px solid #e6ece7}td input{width:100%;min-width:60px;padding:10px;border:1px solid #d5dfd7;border-radius:7px;font:inherit}td .item-name{min-width:160px}.line-total{font-weight:700;white-space:nowrap;padding-left:10px}.remove{border:0;background:#fff0f0;color:#a42d2d;border-radius:7px;padding:8px 10px;cursor:pointer}.actions{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}.btn{border:0;border-radius:8px;padding:11px 16px;font-weight:700;cursor:pointer;font-size:14px}.btn-add{background:#e7f5e9;color:var(--deep)}.btn-main{background:var(--green);color:white}.btn-secondary{background:#e9eeea;color:#34483a}.total-box{margin-left:auto;min-width:230px;background:#f5faf5;border:1px solid #dce9de;border-radius:10px;padding:15px 18px}.total-row{display:flex;justify-content:space-between;gap:20px;font-size:14px;margin:5px 0}.grand{border-top:1px solid #d5e2d7;padding-top:10px;margin-top:10px;font-size:20px;font-weight:800;color:var(--deep)}.hint{font-size:12px;color:#69766c;line-height:1.5;margin:12px 0 0}.preview-label{font-size:13px;color:#627066;margin:0 0 10px}.invoice{background:white;max-width:800px;margin:0 auto;border:1px solid #e1e8e2;padding:24px}.invoice-banner{display:block;width:100%;height:auto;object-fit:contain}.invoice-meta{display:flex;justify-content:space-between;gap:20px;padding:18px 0;border-bottom:2px solid var(--green);font-size:13px}.invoice-meta h2{margin:0 0 8px;font-size:21px;color:var(--deep)}.invoice-meta p{margin:4px 0}.bill-to{padding:16px 0 18px;font-size:13px;line-height:1.5}.bill-to h3{font-size:12px;color:#647268;text-transform:uppercase;letter-spacing:.07em;margin:0 0 6px}.invoice table{min-width:0}.invoice th{background:var(--deep);color:#fff;padding:11px 10px}.invoice td{padding:11px 10px;font-size:13px}.invoice .amount-summary{width:min(100%,300px);margin:16px 0 18px auto}.amount-summary .total-row{font-size:13px}.amount-summary .grand{font-size:19px}.phone{border-top:1px solid #e0e7e1;padding:12px 0;text-align:right;font-size:13px;font-weight:700;color:var(--deep)}.ruco-footer{display:block;width:100%;height:auto;margin-top:14px}.empty-note{color:#69766c;font-size:13px}.no-print{}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.panel{padding:16px}.topbar{align-items:flex-start;flex-direction:column}.invoice{padding:14px}.invoice-meta{font-size:11px}.invoice-meta h2{font-size:18px}}
+@page{size:A4;margin:12mm}
+@media print{body{background:#fff}.topbar,.panel,.preview-label{display:none!important}body.printing #printArea{display:block!important}#printArea{display:block!important}.invoice{border:0;padding:0;max-width:none;margin:0}.invoice-banner{width:100%}.invoice table{page-break-inside:avoid}.invoice-meta,.bill-to,.amount-summary,.phone,.ruco-footer{break-inside:avoid}button{display:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar"><div><h1>Green Energy Billing System</h1><p>Create an invoice and download it as a PDF — no account or database needed.</p></div><button class="btn btn-main" onclick="downloadPDF()">Download Bill PDF</button></div>
+  <section class="panel">
+    <h2 class="section-title">Invoice details</h2>
+    <div class="grid">
+      <div class="field"><label for="invoiceNo">Invoice number</label><input id="invoiceNo" autocomplete="off"></div>
+      <div class="field"><label for="invoiceDate">Invoice date</label><input id="invoiceDate" type="date"></div>
+      <div class="field"><label for="customerName">Customer name *</label><input id="customerName" placeholder="Enter customer name"></div>
+      <div class="field"><label for="customerPhone">Customer phone number</label><input id="customerPhone" type="tel" placeholder="Enter customer phone"></div>
+    </div>
+  </section>
+  <section class="panel">
+    <h2 class="section-title">Items</h2>
+    <div class="table-wrap"><table><thead><tr><th style="width:38%">Item</th><th style="width:16%">Quantity</th><th style="width:18%">Price (₹)</th><th style="width:20%">Total (₹)</th><th></th></tr></thead><tbody id="itemRows"></tbody></table></div>
+    <div class="actions"><button class="btn btn-add" onclick="addItem()">+ Add item</button><div class="total-box"><div class="total-row"><span>Items</span><strong id="itemCount">1</strong></div><div class="total-row grand"><span>Grand total</span><span id="grandTotal">₹0.00</span></div></div></div>
+    <p class="hint">Quantity × price is calculated automatically. One item is supported, and you can add as many rows as needed. At least one item must remain.</p>
+  </section>
+  <p class="preview-label">Invoice preview — this is the bill that will be printed or saved as a PDF.</p>
+  <section id="printArea" class="invoice">
+    <img class="invoice-banner" src="images/green-energy-banner.jpg" alt="Green Energy — Used Cooking Oil Dealers — RUCO/FSSAI Authorised Aggregator — Vengara, Malappuram. 676301">
+    <div class="invoice-meta"><div><h2>INVOICE</h2><p><strong>Invoice No:</strong> <span id="pInvoiceNo"></span></p><p><strong>Date:</strong> <span id="pInvoiceDate"></span></p></div><div style="text-align:right"><p><strong>Contact:</strong> 9846811015</p></div></div>
+    <div class="bill-to"><h3>Bill to</h3><strong id="pCustomerName">Customer name</strong><div id="pCustomerPhone"></div></div>
+    <table><thead><tr><th style="width:46%">Item</th><th style="text-align:right">Quantity</th><th style="text-align:right">Price (₹)</th><th style="text-align:right">Total (₹)</th></tr></thead><tbody id="previewRows"></tbody></table>
+    <div class="amount-summary"><div class="total-row"><span>Total items</span><strong id="pItemCount">1</strong></div><div class="total-row grand"><span>Grand Total</span><span id="pGrandTotal">₹0.00</span></div></div>
+    <div class="phone">For enquiries: 9846811015</div>
+    <img class="ruco-footer" src="images/ruco-footer.jpg" alt="Registered Aggregator of NFP Unit Under RUCO Programme /greenenergyuco.com">
+  </section>
+</div>
+<script>
+const money = n => new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',minimumFractionDigits:2}).format(n || 0);
+const today = new Date();
+document.getElementById('invoiceDate').value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+document.getElementById('invoiceNo').value = 'GE-' + today.getFullYear() + String(today.getMonth()+1).padStart(2,'0') + String(today.getDate()).padStart(2,'0') + '-001';
+function addItem(name='', qty='', price=''){
+ const row=document.createElement('tr');
+ row.innerHTML=`<td><input class="item-name" aria-label="Item name" placeholder="Item name" value=""></td><td><input class="qty" aria-label="Quantity" type="number" min="0" step="any" placeholder="0" value=""></td><td><input class="price" aria-label="Price" type="number" min="0" step="0.01" placeholder="0.00" value=""></td><td class="line-total">₹0.00</td><td><button class="remove" type="button" aria-label="Remove item">×</button></td>`;
+ row.querySelector('.item-name').value=name;row.querySelector('.qty').value=qty;row.querySelector('.price').value=price;
+ row.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));
+ row.querySelector('.remove').addEventListener('click',()=>{if(document.querySelectorAll('#itemRows tr').length>1){row.remove();update();}});
+ document.getElementById('itemRows').appendChild(row);update();
+}
+function safeText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function update(){
+ const rows=[...document.querySelectorAll('#itemRows tr')];let grand=0;const preview=[];
+ rows.forEach(r=>{const name=r.querySelector('.item-name').value.trim();const q=Math.max(0,Number(r.querySelector('.qty').value)||0);const p=Math.max(0,Number(r.querySelector('.price').value)||0);const total=q*p;grand+=total;r.querySelector('.line-total').textContent=money(total);if(name||r.querySelector('.qty').value||r.querySelector('.price').value){preview.push(`<tr><td>${safeText(name||'—')}</td><td style="text-align:right">${q.toLocaleString('en-IN')}</td><td style="text-align:right">${money(p)}</td><td style="text-align:right">${money(total)}</td></tr>`);}});
+ document.getElementById('grandTotal').textContent=money(grand);document.getElementById('itemCount').textContent=rows.length;document.getElementById('previewRows').innerHTML=preview.length?preview.join(''):'<tr><td colspan="4" class="empty-note">Add item details above to preview them here.</td></tr>';
+ document.getElementById('pGrandTotal').textContent=money(grand);document.getElementById('pItemCount').textContent=rows.length;
+ document.getElementById('pInvoiceNo').textContent=document.getElementById('invoiceNo').value||'—';const date=document.getElementById('invoiceDate').value;document.getElementById('pInvoiceDate').textContent=date?new Date(date+'T00:00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}):'—';
+ document.getElementById('pCustomerName').textContent=document.getElementById('customerName').value.trim()||'Customer name';document.getElementById('pCustomerPhone').textContent=document.getElementById('customerPhone').value.trim();
+}
+['invoiceNo','invoiceDate','customerName','customerPhone'].forEach(id=>document.getElementById(id).addEventListener('input',update));
+function downloadPDF(){
+ if(!document.getElementById('customerName').value.trim()){alert('Please enter the customer name first.');document.getElementById('customerName').focus();return;}
+ const rows=[...document.querySelectorAll('#itemRows tr')];const hasItem=rows.some(r=>r.querySelector('.item-name').value.trim() && Number(r.querySelector('.qty').value)>0);
+ if(!hasItem){alert('Please add at least one item with a name and quantity greater than zero.');return;}
+ update();window.print();
+}
+addItem();
+</script>
+</body></html>
